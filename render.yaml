@@ -1,0 +1,74 @@
+# ScopeGuard AI - Render Blueprint Specification
+# Deploys frontend as a Render Static Site and backend as a Render Web Service.
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. Backend API Web Service
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: scopeguard-api
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: TRUST_PROXY
+        value: "true"
+      # Allowed frontend origin for CORS.
+      # Set in Render Dashboard to your actual static site URL once generated.
+      # Example: https://scopeguard-ui.onrender.com (or https://scopeguard-ui-xxxx.onrender.com)
+      - key: CLIENT_ORIGIN
+        sync: false
+      # AI Provider: 'hosted' for cloud deployment with an active open-weight Gemma model
+      - key: AI_PROVIDER
+        value: hosted
+      # Hosted OpenAI-compatible open-weight endpoint URL.
+      # Verified Active Default: OpenRouter
+      # - OpenRouter: https://openrouter.ai/api/v1 (model: google/gemma-2-9b-it)
+      # - DeepInfra: https://api.deepinfra.com/v1/openai (model: google/gemma-2-9b-it)
+      # Note: Groq gemma2-9b-it was deprecated on Oct 8, 2025 and is no longer available.
+      - key: HOSTED_AI_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: HOSTED_AI_MODEL
+        value: google/gemma-2-9b-it
+      # Secret API key for the hosted provider. NEVER commit real keys.
+      # Supply this securely in the Render Web Service dashboard under Environment.
+      - key: HOSTED_AI_API_KEY
+        sync: false
+      - key: AI_TIMEOUT_MS
+        value: 60000
+      - key: RATE_LIMIT_MAX
+        value: 30
+
+  # ---------------------------------------------------------------------------
+  # 2. Frontend React Client (Static Site)
+  # ---------------------------------------------------------------------------
+  - type: static
+    name: scopeguard-ui
+    plan: free
+    region: oregon
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Public backend API URL.
+      # NOTE: Vite bakes VITE_* variables into static JavaScript files AT BUILD TIME.
+      # After your scopeguard-api web service is created and assigned a domain
+      # (e.g. https://scopeguard-api-xxxx.onrender.com), set this variable in the
+      # scopeguard-ui dashboard and trigger a "Clear build cache & deploy" so Vite
+      # bakes the live backend URL into the production bundle.
+      - key: VITE_API_BASE_URL
+        sync: false

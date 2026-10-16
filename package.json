@@ -1,0 +1,24 @@
+{
+  "name": "scopeguard-ai",
+  "version": "1.0.0",
+  "description": "Know when a client request goes beyond the original deal.",
+  "scripts": {
+    "install:all": "npm --prefix client install && npm --prefix server install",
+    "build:client": "npm --prefix client run build",
+    "build:server": "npm --prefix server run build",
+    "build": "npm run build:client && npm run build:server",
+    "test": "npm --prefix server run test",
+    "test:eval": "npm --prefix server run test:eval",
+    "start:client": "npm --prefix client run dev",
+    "start:server": "npm --prefix server run dev"
+  },
+  "keywords": [
+    "scopeguard",
+    "freelance",
+    "sow",
+    "scope-creep",
+    "hacktoberfest-2026"
+  ],
+  "author": "",
+  "license": "MIT"
+}
