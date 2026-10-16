@@ -161,8 +161,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({
     ),
     timeout: (
       <p>
-        The AI analysis took too long and was cancelled. Local Gemma inference can take 1–3 minutes on CPU-only
-        hardware. Your text is preserved — try again when the system is less busy.
+        The AI analysis took too long and was cancelled. Complex contract analysis or busy upstream model queues can take 1–2 minutes. Your text is preserved — try clicking Retry Analysis below.
       </p>
     ),
     ratelimit: (

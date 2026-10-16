@@ -52,7 +52,7 @@ export class OllamaAdapter implements AIModelAdapter {
     }
     this.baseUrl = url;
     this.model = config.model;
-    this.timeoutMs = config.timeoutMs || 90000; // 90s timeout for local models
+    this.timeoutMs = config.timeoutMs || 120000; // 120s timeout for models
   }
 
   async isAvailable(): Promise<boolean> {
@@ -175,7 +175,7 @@ export class HostedOpenWeightAdapter implements AIModelAdapter {
     this.baseUrl = config.baseUrl.replace(/\/+$/, '');
     this.model = config.model;
     this.apiKey = config.apiKey?.trim();
-    this.timeoutMs = config.timeoutMs || 60000;
+    this.timeoutMs = config.timeoutMs || 120000;
   }
 
   async isAvailable(): Promise<boolean> {
@@ -350,13 +350,13 @@ export function createAIAdapter(): AIModelAdapter {
       baseUrl: process.env.HOSTED_AI_BASE_URL || 'https://openrouter.ai/api/v1',
       model: process.env.HOSTED_AI_MODEL || 'google/gemma-2-9b-it',
       apiKey: process.env.HOSTED_AI_API_KEY,
-      timeoutMs: process.env.AI_TIMEOUT_MS ? parseInt(process.env.AI_TIMEOUT_MS, 10) : 60000,
+      timeoutMs: process.env.AI_TIMEOUT_MS ? parseInt(process.env.AI_TIMEOUT_MS, 10) : 120000,
     });
   }
 
   return new OllamaAdapter({
     baseUrl,
     model,
-    timeoutMs: process.env.AI_TIMEOUT_MS ? parseInt(process.env.AI_TIMEOUT_MS, 10) : 90000,
+    timeoutMs: process.env.AI_TIMEOUT_MS ? parseInt(process.env.AI_TIMEOUT_MS, 10) : 120000,
   });
 }
