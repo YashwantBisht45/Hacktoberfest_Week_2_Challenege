@@ -130,11 +130,17 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 
   const isClientError =
     err.message.includes('AI Service Unavailable') ||
+    err.message.includes('Hosted AI') ||
+    err.message.includes('hosted') ||
+    err.message.includes('provider') ||
     err.message.includes('timed out') ||
     err.message.includes('malformed') ||
     err.message.includes('schema validation failed') ||
     err.message.includes('API key') ||
-    err.message.includes('rate limit');
+    err.message.includes('rate limit') ||
+    err.message.includes('Analysis failed') ||
+    err.message.includes('Model output') ||
+    err.message.includes('No such model');
 
   const statusCode = err.message.includes('rate limit') ? 429 : isClientError ? 503 : 500;
 
